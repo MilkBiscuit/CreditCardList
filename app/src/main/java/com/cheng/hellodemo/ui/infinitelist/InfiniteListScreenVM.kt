@@ -21,10 +21,28 @@ class InfiniteListScreenVM @Inject constructor(
 
     init {
         viewModelScope.launch {
+            val creditCardList = getCreditCardListUC.invoke()
             _stateFlow.value = InfiniteListScreenState.Presenting(
-                dataList = getCreditCardListUC.invoke(),
+                dataList = creditCardList,
+                isLoading = false,
             )
         }
+    }
+
+    fun loadMore() = viewModelScope.launch {
+        val currentState = _stateFlow.value as InfiniteListScreenState.Presenting
+        val currentList = currentState.dataList
+        _stateFlow.value = currentState.copy(isLoading = true)
+
+        val newlyFetchedList = getCreditCardListUC.invoke()
+        val newList = buildList {
+            addAll(currentList)
+            addAll(newlyFetchedList)
+        }
+        _stateFlow.tryEmit(InfiniteListScreenState.Presenting(
+            dataList = newList,
+            isLoading = false,
+        ))
     }
 
 }

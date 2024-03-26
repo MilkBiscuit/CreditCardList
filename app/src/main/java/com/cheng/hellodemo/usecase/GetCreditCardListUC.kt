@@ -1,5 +1,6 @@
 package com.cheng.hellodemo.usecase
 
+import android.util.Log
 import com.cheng.hellodemo.adapter.JsonHelper
 import com.cheng.hellodemo.domain.adapterinterface.IRestApiRemote
 import com.cheng.hellodemo.domain.model.CreditCardData
@@ -12,7 +13,8 @@ class GetCreditCardListUC @Inject constructor(
 ) {
 
     suspend fun invoke(): List<CreditCardData> = withContext(Dispatchers.IO) {
-        val result = restApiRemote.get(url = "https://random-data-api.com/api/v2/credit_cards?size=100")
+        Log.i("trpb67", "GetCreditCardListUC is invoked!")
+        val result = restApiRemote.get(url = "https://random-data-api.com/api/v2/credit_cards?size=20")
         val jsonString = result.getOrNull() ?: return@withContext emptyList()
 
         JsonHelper.fromJsonString<List<CreditCardData>>(jsonString) ?: emptyList()

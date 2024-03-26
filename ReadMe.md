@@ -9,6 +9,7 @@ https://random-data-api.com/api/v2/credit_cards?size=100
 
 
 # Notes
-1. The requirement is quite simple, barely has any business logic, so didn't add unit test or any UI test.
+1. The requirement is quite simple, barely has any business logic, so didn't add unit test, no UI test either.
 2. Assume the API always works fine, didn't add any UI for API service down and it fails to get any data.
 3. Ignore about the localisation, all strings are hardcoded.
+4. The API returns different random data for every call, which is quite unexpected. 

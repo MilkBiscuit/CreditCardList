@@ -6,5 +6,6 @@ interface InfiniteListScreenState {
     data object Loading: InfiniteListScreenState
     data class Presenting(
         val dataList: List<CreditCardData>,
+        val isLoading: Boolean,
     ): InfiniteListScreenState
 }
