@@ -26,6 +26,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,6 +35,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.cheng.hellodemo.domain.model.CreditCardData
 import com.cheng.hellodemo.ui.common.widget.CircularProgressIndicator
 import com.cheng.hellodemo.ui.theme.HelloDemoTheme
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 
 
 @Composable
@@ -97,27 +103,20 @@ private fun BoxScope.PresentingView(
     loadMore: () -> Unit,
 ) {
     CreditCardListView(
+        isLoading = screenState.isLoading,
         creditCardList = screenState.dataList,
         loadMore = loadMore,
     )
-    if (screenState.isLoading) {
-        CircularProgressIndicator(
-            Modifier.size(50.dp).align(Alignment.Center)
-        )
-    }
 }
 
 @Composable
 private fun CreditCardListView(
+    isLoading: Boolean,
     creditCardList: List<CreditCardData>,
     loadMore: () -> Unit,
 ) {
-    val listState = rememberLazyListState()
-    val reachedBottom: Boolean by remember {
-        derivedStateOf { listState.reachedBottom() }
-    }
-    LaunchedEffect(reachedBottom) {
-        if (reachedBottom) loadMore()
+    val listState = rememberLazyListState().also {
+        it.ScrollEndCallback(callback = loadMore)
     }
     LazyColumn(state = listState) {
         itemsIndexed(
@@ -138,14 +137,30 @@ private fun CreditCardListView(
                 leadingContent = { Text((index + 1).toString()) }
             )
         }
+        if (isLoading) {
+            item {
+                Box(
+                    Modifier.fillParentMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(Modifier.size(50.dp))
+                }
+            }
+        }
     }
 }
 
-private fun LazyListState.reachedBottom(loadOffset: Int = 2): Boolean {
-    val lastVisibleItem = this.layoutInfo.visibleItemsInfo.lastOrNull() ?: return false
-    Log.d("trpb67", "last visible item index: ${lastVisibleItem.index}")
-    val totalItemsCount = this.layoutInfo.totalItemsCount
-    return lastVisibleItem.index != 0 && lastVisibleItem.index >= totalItemsCount - loadOffset
+@Composable
+inline fun LazyListState.ScrollEndCallback(crossinline callback: () -> Unit) {
+    LaunchedEffect(key1 = this) {
+        snapshotFlow { layoutInfo }
+            .filter { it.totalItemsCount > 0 }
+            .map { it.totalItemsCount == (it.visibleItemsInfo.lastOrNull()?.index ?: -1).inc() }
+            .distinctUntilChanged()
+            .filter { it }
+            .onEach { callback() }
+            .collect()
+    }
 }
 
 
