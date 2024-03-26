@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+    id 'kotlinx-serialization'
 }
 
 android {
@@ -68,6 +69,8 @@ dependencies {
     implementation libs.ktor.client.core
     implementation libs.ktor.client.okhttp
     implementation libs.ktor.client.logging
+    // Serialization
+    implementation libs.kotlinx.serialization.json
 
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit
