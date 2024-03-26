@@ -1,7 +1,6 @@
 package com.cheng.hellodemo.adapter
 
 import kotlinx.serialization.SerializationException
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 object JsonHelper {
@@ -10,11 +9,6 @@ object JsonHelper {
         isLenient = true
         encodeDefaults = true
         ignoreUnknownKeys = true
-    }
-
-    // The type of T must be marked as @Serializable
-    inline fun<reified T> toJsonString(input: T): String {
-        return json.encodeToString(input)
     }
 
     // The type of T must be marked as @Serializable
