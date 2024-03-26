@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cheng.hellodemo.usecase.GetCreditCardListUC
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,8 +21,6 @@ class InfiniteListScreenVM @Inject constructor(
 
     init {
         viewModelScope.launch {
-            delay(2000L)
-
             _stateFlow.value = InfiniteListScreenState.Presenting(
                 dataList = getCreditCardListUC.invoke(),
             )
