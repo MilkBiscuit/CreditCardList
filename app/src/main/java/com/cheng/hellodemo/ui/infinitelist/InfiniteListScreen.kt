@@ -4,11 +4,13 @@ import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -125,16 +127,16 @@ private fun CreditCardListView(
             ListItem(
                 headlineContent = { Text(creditCardData.creditCardNumber) },
                 supportingContent = {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
+                    Column {
                         Text(creditCardData.creditCardExpiryDate)
-                        Spacer(Modifier.size(20.dp))
                         Text(creditCardData.creditCardType)
                     }
                 },
-                leadingContent = { Text((index + 1).toString()) }
+                leadingContent = {
+                    Text(
+                        text = creditCardData.id.toString(),
+                        modifier = Modifier.width(40.dp))
+                }
             )
         }
         if (isLoading) {
