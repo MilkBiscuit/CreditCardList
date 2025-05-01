@@ -140,7 +140,7 @@ private fun CreditCardListView(
                     Column {
                         Text(
                             text = creditCardData.creditCardExpiryDate,
-                            color = Color(if (expiredByThree(creditCardData.creditCardExpiryDate)) "#FF0000".toColorInt() else "#000000".toColorInt())
+                            color = if (expiredByThree(creditCardData.creditCardExpiryDate)) Color("#FF0000".toColorInt()) else MaterialTheme.colorScheme.onSurface
                             )
                         Text(creditCardData.creditCardType)
                     }
@@ -167,7 +167,7 @@ private fun CreditCardListView(
 }
 
 
-@RequiresApi(Build.VERSION_CODES.O)›
+@RequiresApi(Build.VERSION_CODES.O)
 fun expiredByThree(date: String):Boolean{
 //    val currentDate = "2025-05-02"
     val currentDate = LocalDate.now().toString()
@@ -227,7 +227,7 @@ private fun PreviewCreditCardList() {
                 dataList = listOf(
                     CreditCardData(
                         creditCardNumber = "1212-1221-1121-1234",
-                        creditCardExpiryDate = "2028-05-03Í",
+                        creditCardExpiryDate = "2028-05-03",
                         creditCardType = "discover",
                     ),
                     CreditCardData(
