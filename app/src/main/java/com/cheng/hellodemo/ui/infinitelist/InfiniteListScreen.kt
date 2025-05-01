@@ -1,6 +1,8 @@
 package com.cheng.hellodemo.ui.infinitelist
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,8 +34,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.substring
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.cheng.hellodemo.domain.model.CreditCardData
 import com.cheng.hellodemo.ui.common.widget.CircularProgressIndicator
@@ -42,8 +50,9 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import java.time.LocalDate
 
-
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun InfiniteListScreen(
     viewModel: InfiniteListScreenVM = hiltViewModel(),
@@ -56,6 +65,7 @@ fun InfiniteListScreen(
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun InfiniteListView(
@@ -99,6 +109,7 @@ private fun BoxScope.LoadingView() {
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun BoxScope.PresentingView(
     screenState: InfiniteListScreenState.Presenting,
@@ -111,6 +122,7 @@ private fun BoxScope.PresentingView(
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun CreditCardListView(
     isLoading: Boolean,
@@ -121,21 +133,23 @@ private fun CreditCardListView(
         it.ScrollEndCallback(callback = loadMore)
     }
     LazyColumn(state = listState) {
-        itemsIndexed(
-            items = creditCardList,
-        ) { index, creditCardData ->
+        items(creditCardList) { creditCardData ->
             ListItem(
                 headlineContent = { Text(creditCardData.creditCardNumber) },
                 supportingContent = {
                     Column {
-                        Text(creditCardData.creditCardExpiryDate)
+                        Text(
+                            text = creditCardData.creditCardExpiryDate,
+                            color = Color(if (expiredByThree(creditCardData.creditCardExpiryDate)) "#FF0000".toColorInt() else "#000000".toColorInt())
+                            )
                         Text(creditCardData.creditCardType)
                     }
                 },
                 leadingContent = {
                     Text(
                         text = creditCardData.id.toString(),
-                        modifier = Modifier.width(40.dp))
+                        modifier = Modifier.width(40.dp)
+                    )
                 }
             )
         }
@@ -152,6 +166,30 @@ private fun CreditCardListView(
     }
 }
 
+
+@RequiresApi(Build.VERSION_CODES.O)›
+fun expiredByThree(date: String):Boolean{
+//    val currentDate = "2025-05-02"
+    val currentDate = LocalDate.now().toString()
+//  Check the year first, if the year is difference is exactly 3 then preform more granular checks
+    if (currentDate.substring(0,4).toInt() >= (date.substring(0,4).toInt() - 3)){
+        if (currentDate.substring(0,4).toInt() != (date.substring(0,4).toInt() - 3)){
+            return true
+//      Check the months second if the year difference is exactly 3
+        } else if (currentDate.substring(5,7).toInt() >= date.substring(5,7).toInt()){
+            if (currentDate.substring(5,7).toInt() > date.substring(5,7).toInt()) {
+                return true
+            }
+//          Check days last only if the month is the same as the one on the expiry date
+            else if (currentDate.substring(8,10).toInt() >= date.substring(8,10).toInt()){
+                return true
+            }
+        }
+    }
+    return false
+}
+
+
 @Composable
 inline fun LazyListState.ScrollEndCallback(crossinline callback: () -> Unit) {
     LaunchedEffect(key1 = this) {
@@ -167,6 +205,7 @@ inline fun LazyListState.ScrollEndCallback(crossinline callback: () -> Unit) {
 
 
 ////////////////////////////////////// Preview //////////////////////////////////////
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true, heightDp = 640)
 @Composable
 private fun PreviewLoading() {
@@ -178,6 +217,7 @@ private fun PreviewLoading() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 private fun PreviewCreditCardList() {
@@ -187,7 +227,7 @@ private fun PreviewCreditCardList() {
                 dataList = listOf(
                     CreditCardData(
                         creditCardNumber = "1212-1221-1121-1234",
-                        creditCardExpiryDate = "2028-03-25",
+                        creditCardExpiryDate = "2028-05-03Í",
                         creditCardType = "discover",
                     ),
                     CreditCardData(
