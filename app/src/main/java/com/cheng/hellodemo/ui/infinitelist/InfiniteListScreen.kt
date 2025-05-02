@@ -42,6 +42,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.cheng.hellodemo.domain.CreditCardExpiryChecker
 import com.cheng.hellodemo.domain.model.CreditCardData
 import com.cheng.hellodemo.ui.common.widget.CircularProgressIndicator
 import com.cheng.hellodemo.ui.theme.HelloDemoTheme
@@ -140,8 +141,8 @@ private fun CreditCardListView(
                     Column {
                         Text(
                             text = creditCardData.creditCardExpiryDate,
-                            color = if (expiredByThree(creditCardData.creditCardExpiryDate)) Color("#FF0000".toColorInt()) else MaterialTheme.colorScheme.onSurface
-                            )
+                            color = if (CreditCardExpiryChecker.expireInThreeYears(creditCardData.creditCardExpiryDate)) Color.Red else Color.Black,
+                        )
                         Text(creditCardData.creditCardType)
                     }
                 },
@@ -164,29 +165,6 @@ private fun CreditCardListView(
             }
         }
     }
-}
-
-
-@RequiresApi(Build.VERSION_CODES.O)
-fun expiredByThree(date: String):Boolean{
-//    val currentDate = "2025-05-02"
-    val currentDate = LocalDate.now().toString()
-//  Check the year first, if the year is difference is exactly 3 then preform more granular checks
-    if (currentDate.substring(0,4).toInt() >= (date.substring(0,4).toInt() - 3)){
-        if (currentDate.substring(0,4).toInt() != (date.substring(0,4).toInt() - 3)){
-            return true
-//      Check the months second if the year difference is exactly 3
-        } else if (currentDate.substring(5,7).toInt() >= date.substring(5,7).toInt()){
-            if (currentDate.substring(5,7).toInt() > date.substring(5,7).toInt()) {
-                return true
-            }
-//          Check days last only if the month is the same as the one on the expiry date
-            else if (currentDate.substring(8,10).toInt() >= date.substring(8,10).toInt()){
-                return true
-            }
-        }
-    }
-    return false
 }
 
 
@@ -227,7 +205,7 @@ private fun PreviewCreditCardList() {
                 dataList = listOf(
                     CreditCardData(
                         creditCardNumber = "1212-1221-1121-1234",
-                        creditCardExpiryDate = "2028-05-03",
+                        creditCardExpiryDate = "2028-05-02",
                         creditCardType = "discover",
                     ),
                     CreditCardData(
@@ -237,7 +215,7 @@ private fun PreviewCreditCardList() {
                     ),
                     CreditCardData(
                         creditCardNumber = "1234-2121-1221-1211",
-                        creditCardExpiryDate = "2028-03-25",
+                        creditCardExpiryDate = "2028-05-01",
                         creditCardType = "diners_club",
                     ),
                     CreditCardData(
