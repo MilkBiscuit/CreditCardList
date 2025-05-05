@@ -12,6 +12,7 @@ ktorBom = "2.3.8"
 lifecycleRuntimeKtx = "2.6.1"
 activityCompose = "1.8.0"
 composeBom = "2023.08.00"
+junitKtx = "1.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -36,6 +37,7 @@ ktor-bom = { module = "io.ktor:ktor-bom", version.ref = "ktorBom" }
 ktor-client-core = { module = "io.ktor:ktor-client-core" }
 ktor-client-logging = { module = "io.ktor:ktor-client-logging" }
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp" }
+androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

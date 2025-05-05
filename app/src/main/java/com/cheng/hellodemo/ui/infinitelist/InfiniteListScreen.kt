@@ -53,7 +53,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import java.time.LocalDate
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun InfiniteListScreen(
     viewModel: InfiniteListScreenVM = hiltViewModel(),
@@ -66,7 +65,6 @@ fun InfiniteListScreen(
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun InfiniteListView(
@@ -110,7 +108,6 @@ private fun BoxScope.LoadingView() {
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun BoxScope.PresentingView(
     screenState: InfiniteListScreenState.Presenting,
@@ -123,7 +120,6 @@ private fun BoxScope.PresentingView(
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun CreditCardListView(
     isLoading: Boolean,
@@ -183,7 +179,6 @@ inline fun LazyListState.ScrollEndCallback(crossinline callback: () -> Unit) {
 
 
 ////////////////////////////////////// Preview //////////////////////////////////////
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true, heightDp = 640)
 @Composable
 private fun PreviewLoading() {
@@ -195,7 +190,6 @@ private fun PreviewLoading() {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 private fun PreviewCreditCardList() {

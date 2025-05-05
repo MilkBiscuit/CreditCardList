@@ -63,6 +63,7 @@ dependencies {
     // Google - hilt
     implementation libs.hilt.android
     implementation libs.androidx.hilt.navigation.compose
+    implementation libs.androidx.junit.ktx
     kapt libs.hilt.compiler
     // Ktor
     implementation platform(libs.ktor.bom)
@@ -78,6 +79,7 @@ dependencies {
     androidTestImplementation libs.androidx.ui.test.junit4
     debugImplementation libs.androidx.ui.tooling
     debugImplementation libs.androidx.ui.test.manifest
+    implementation "org.jetbrains.kotlin:kotlin-test:1.9.25"
 }
 
 // Allow references to generated code
