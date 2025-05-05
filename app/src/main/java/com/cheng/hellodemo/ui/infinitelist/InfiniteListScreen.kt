@@ -1,22 +1,17 @@
 package com.cheng.hellodemo.ui.infinitelist
 
-import android.os.Build
-import android.util.Log
-import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ListItem
@@ -28,21 +23,18 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.substring
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.cheng.hellodemo.R
 import com.cheng.hellodemo.domain.CreditCardExpiryChecker
+import com.cheng.hellodemo.domain.CreditCardLogo
 import com.cheng.hellodemo.domain.model.CreditCardData
 import com.cheng.hellodemo.ui.common.widget.CircularProgressIndicator
 import com.cheng.hellodemo.ui.theme.HelloDemoTheme
@@ -51,9 +43,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import java.time.LocalDate
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun InfiniteListScreen(
     viewModel: InfiniteListScreenVM = hiltViewModel(),
@@ -66,7 +56,6 @@ fun InfiniteListScreen(
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun InfiniteListView(
@@ -110,7 +99,6 @@ private fun BoxScope.LoadingView() {
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun BoxScope.PresentingView(
     screenState: InfiniteListScreenState.Presenting,
@@ -123,7 +111,6 @@ private fun BoxScope.PresentingView(
     )
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 private fun CreditCardListView(
     isLoading: Boolean,
@@ -143,7 +130,16 @@ private fun CreditCardListView(
                             text = creditCardData.creditCardExpiryDate,
                             color = if (CreditCardExpiryChecker.expireInThreeYears(creditCardData.creditCardExpiryDate)) Color.Red else Color.Black,
                         )
-                        Text(creditCardData.creditCardType)
+                        val creditCardLogo = CreditCardLogo.getCreditCardLogo(creditCardData.creditCardType)
+                        if (creditCardLogo != null)
+                            Image(
+                                painter = painterResource(creditCardLogo),
+                                contentDescription = creditCardData.creditCardType,
+                                modifier = Modifier.width(30.dp).height(20.dp)
+
+                                )
+                        else
+                            Text(creditCardData.creditCardType)
                     }
                 },
                 leadingContent = {
@@ -183,7 +179,6 @@ inline fun LazyListState.ScrollEndCallback(crossinline callback: () -> Unit) {
 
 
 ////////////////////////////////////// Preview //////////////////////////////////////
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true, heightDp = 640)
 @Composable
 private fun PreviewLoading() {
@@ -195,7 +190,6 @@ private fun PreviewLoading() {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 private fun PreviewCreditCardList() {
