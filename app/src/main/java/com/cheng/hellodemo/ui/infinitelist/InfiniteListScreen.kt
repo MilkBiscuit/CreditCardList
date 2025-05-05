@@ -130,10 +130,10 @@ private fun CreditCardListView(
                             text = creditCardData.creditCardExpiryDate,
                             color = if (CreditCardExpiryChecker.expireInThreeYears(creditCardData.creditCardExpiryDate)) Color.Red else Color.Black,
                         )
-                        val creditCardLogo = CreditCardLogo.getCreditCardLogo(creditCardData.creditCardType)
-                        if (creditCardLogo != null)
+                        val cardLogo = CreditCardLogo.getCreditCardLogo(creditCardData.creditCardType)
+                        if (cardLogo != null)
                             Image(
-                                painter = painterResource(creditCardLogo),
+                                painter = painterResource(cardLogo),
                                 contentDescription = creditCardData.creditCardType,
                                 modifier = Modifier.width(30.dp).height(20.dp)
 
