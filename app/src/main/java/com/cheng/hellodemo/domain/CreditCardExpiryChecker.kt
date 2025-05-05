@@ -4,7 +4,7 @@ import java.time.LocalDate
 
 object CreditCardExpiryChecker {
 
-    fun expireInThreeYears(inputDate: String):Boolean {
+    fun expiresInThreeYears(inputDate: String): Boolean {
         val parsedInputDate = LocalDate.parse(inputDate)
         val cutOffDate = LocalDate.now().plusYears(3)
 
