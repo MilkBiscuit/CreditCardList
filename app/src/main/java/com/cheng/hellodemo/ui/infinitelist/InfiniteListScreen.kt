@@ -32,7 +32,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.cheng.hellodemo.R
 import com.cheng.hellodemo.domain.CreditCardExpiryChecker
 import com.cheng.hellodemo.domain.CreditCardLogo
 import com.cheng.hellodemo.domain.model.CreditCardData
@@ -128,7 +127,7 @@ private fun CreditCardListView(
                     Column {
                         Text(
                             text = creditCardData.creditCardExpiryDate,
-                            color = if (CreditCardExpiryChecker.expireInThreeYears(creditCardData.creditCardExpiryDate)) Color.Red else Color.Black,
+                            color = if (CreditCardExpiryChecker.expiresInThreeYears(creditCardData.creditCardExpiryDate)) Color.Red else Color.Black,
                         )
                         val cardLogo = CreditCardLogo.getCreditCardLogo(creditCardData.creditCardType)
                         if (cardLogo != null)
