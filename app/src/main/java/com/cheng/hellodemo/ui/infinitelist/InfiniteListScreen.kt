@@ -34,9 +34,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.cheng.hellodemo.domain.CreditCardExpiryChecker
 import com.cheng.hellodemo.domain.model.CreditCardBrand
-import com.cheng.hellodemo.ui.CreditCardLogo
 import com.cheng.hellodemo.domain.model.CreditCardData
 import com.cheng.hellodemo.ui.common.widget.CircularProgressIndicator
+import com.cheng.hellodemo.ui.getResourceId
 import com.cheng.hellodemo.ui.theme.HelloDemoTheme
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -131,10 +131,10 @@ private fun CreditCardListView(
                             color = if (CreditCardExpiryChecker.expiresInThreeYears(creditCardData.creditCardExpiryDate)) Color.Red else Color.Black,
                         )
                         val creditCardBrand = CreditCardBrand.fromString(creditCardData.creditCardType)
-                        val creditCardLogo = CreditCardLogo.getCreditCardLogoResId(creditCardBrand)
-                        if (creditCardLogo != null) {
+                        val imageResId = creditCardBrand.getResourceId()
+                        if (imageResId != null) {
                             Image(
-                                painter = painterResource(creditCardLogo),
+                                painter = painterResource(imageResId),
                                 contentDescription = creditCardData.creditCardType,
                                 modifier = Modifier
                                     .width(30.dp)
