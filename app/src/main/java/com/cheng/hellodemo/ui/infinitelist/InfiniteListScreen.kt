@@ -85,6 +85,9 @@ private fun InfiniteListView(
                     screenState = screenState,
                     loadMore = loadMore,
                 )
+                is InfiniteListScreenState.Error -> ErrorView(
+                    message = "Error Credit Cards Failed to Load"
+                )
             }
         }
     }
@@ -108,6 +111,16 @@ private fun BoxScope.PresentingView(
         isLoading = screenState.isLoading,
         creditCardList = screenState.dataList,
         loadMore = loadMore,
+    )
+}
+
+@Composable
+private fun BoxScope.ErrorView(message: String) {
+    Text(
+        text=message,
+        modifier = Modifier
+            .size(150.dp)
+            .align(Alignment.Center)
     )
 }
 
@@ -224,6 +237,19 @@ private fun PreviewCreditCardList() {
                 isLoading = true
             ),
             loadMore = {},
+        )
+    }
+}
+
+@Preview(showBackground = true, heightDp = 640)
+@Composable
+private fun PreviewError() {
+    HelloDemoTheme {
+        InfiniteListView(
+            screenState = InfiniteListScreenState.Error(
+                message = "Error Credit Cards Failed to Load"
+            ),
+            loadMore = {}
         )
     }
 }
