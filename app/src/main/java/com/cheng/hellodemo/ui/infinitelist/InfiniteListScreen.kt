@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -85,6 +86,9 @@ private fun InfiniteListView(
                     screenState = screenState,
                     loadMore = loadMore,
                 )
+                is InfiniteListScreenState.Error -> ErrorView(
+                    message = screenState
+                )
             }
         }
     }
@@ -108,6 +112,17 @@ private fun BoxScope.PresentingView(
         isLoading = screenState.isLoading,
         creditCardList = screenState.dataList,
         loadMore = loadMore,
+    )
+}
+
+@Composable
+private fun BoxScope.ErrorView(message: InfiniteListScreenState.Error) {
+    Text(
+        text=message.message,
+        modifier = Modifier
+            .width(150.dp)
+            .align(Alignment.Center),
+        textAlign = TextAlign.Center
     )
 }
 
@@ -224,6 +239,17 @@ private fun PreviewCreditCardList() {
                 isLoading = true
             ),
             loadMore = {},
+        )
+    }
+}
+
+@Preview(showBackground = true, heightDp = 640)
+@Composable
+private fun PreviewError() {
+    HelloDemoTheme {
+        InfiniteListView(
+            screenState = InfiniteListScreenState.Error("ERROR: Credit Cards did not Load"),
+            loadMore = {}
         )
     }
 }
