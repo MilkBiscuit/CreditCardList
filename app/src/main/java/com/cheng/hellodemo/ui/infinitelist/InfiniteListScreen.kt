@@ -33,9 +33,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.cheng.hellodemo.domain.CreditCardExpiryChecker
-import com.cheng.hellodemo.domain.CreditCardLogo
+import com.cheng.hellodemo.domain.model.CreditCardBrand
 import com.cheng.hellodemo.domain.model.CreditCardData
 import com.cheng.hellodemo.ui.common.widget.CircularProgressIndicator
+import com.cheng.hellodemo.ui.getResourceId
 import com.cheng.hellodemo.ui.theme.HelloDemoTheme
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -129,16 +130,19 @@ private fun CreditCardListView(
                             text = creditCardData.creditCardExpiryDate,
                             color = if (CreditCardExpiryChecker.expiresInThreeYears(creditCardData.creditCardExpiryDate)) Color.Red else Color.Black,
                         )
-                        val cardLogo = CreditCardLogo.getCreditCardLogo(creditCardData.creditCardType)
-                        if (cardLogo != null)
+                        val creditCardBrand = CreditCardBrand.fromString(creditCardData.creditCardType)
+                        val imageResId = creditCardBrand.getResourceId()
+                        if (imageResId != null) {
                             Image(
-                                painter = painterResource(cardLogo),
+                                painter = painterResource(imageResId),
                                 contentDescription = creditCardData.creditCardType,
-                                modifier = Modifier.width(30.dp).height(20.dp)
-
-                                )
-                        else
+                                modifier = Modifier
+                                    .width(30.dp)
+                                    .height(20.dp)
+                            )
+                        } else {
                             Text(creditCardData.creditCardType)
+                        }
                     }
                 },
                 leadingContent = {

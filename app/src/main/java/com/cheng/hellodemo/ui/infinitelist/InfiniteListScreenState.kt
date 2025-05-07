@@ -4,6 +4,9 @@ import com.cheng.hellodemo.domain.model.CreditCardData
 
 interface InfiniteListScreenState {
     data object Loading: InfiniteListScreenState
+    data class Error(
+        val message: String
+    ): InfiniteListScreenState
     data class Presenting(
         val dataList: List<CreditCardData>,
         val isLoading: Boolean,
