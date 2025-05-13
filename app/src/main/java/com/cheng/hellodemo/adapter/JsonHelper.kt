@@ -13,11 +13,7 @@ object JsonHelper {
 
     // The type of T must be marked as @Serializable
     inline fun<reified T> fromJsonString(jsonString: String): T? {
-        return try {
-            json.decodeFromString(jsonString)
-        } catch (e: SerializationException) {
-            null
-        }
+        return json.decodeFromString(jsonString)
     }
 
 }

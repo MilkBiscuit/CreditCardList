@@ -6,18 +6,23 @@ import com.cheng.hellodemo.domain.adapterinterface.IRestApiRemote
 import com.cheng.hellodemo.domain.model.CreditCardData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.serializerOrNull
 import javax.inject.Inject
 
 class GetCreditCardListUC @Inject constructor(
     private val restApiRemote: IRestApiRemote,
 ) {
 
-    suspend fun invoke(): List<CreditCardData> = withContext(Dispatchers.IO) {
+    suspend fun invoke(): Result<List<CreditCardData>> = withContext(Dispatchers.IO) {
         Log.i("trpb67", "GetCreditCardListUC is invoked!")
-        val result = restApiRemote.get(url = "https://random-data-api.com/api/v2/credit_cards?size=20")
-        val jsonString = result.getOrNull() ?: return@withContext emptyList()
-
-        JsonHelper.fromJsonString<List<CreditCardData>>(jsonString) ?: emptyList()
+        try {
+            val result = restApiRemote.get(url = "https://random-data-api.com/api/v2/credit_cards?size=20")
+            val jsonString = result.getOrNull() ?: throw NullPointerException("No Credit Cards Found")
+            return@withContext Result.success(JsonHelper.fromJsonString<List<CreditCardData>>(jsonString)!!)
+        } catch (e: SerializationException) {
+            return@withContext Result.failure(e)
+        }
     }
 
 }
