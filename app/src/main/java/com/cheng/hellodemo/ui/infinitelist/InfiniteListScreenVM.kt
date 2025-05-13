@@ -22,11 +22,19 @@ class InfiniteListScreenVM @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val creditCardList = getCreditCardListUC.invoke()
+            getCreditCardListUC.invoke().onSuccess{ cardsList ->
+            val creditCardList = cardsList
             _stateFlow.value = InfiniteListScreenState.Presenting(
                 dataList = creditCardList,
                 isLoading = false,
             )
+            }
+            getCreditCardListUC.invoke().onFailure{ err ->
+                val errorMessage = err.toString()
+                _stateFlow.value = InfiniteListScreenState.Error(
+                    message = errorMessage
+                )
+            }
         }
     }
 
@@ -38,7 +46,9 @@ class InfiniteListScreenVM @Inject constructor(
         _stateFlow.value = currentState.copy(isLoading = true)
         Log.v("trpb67", "currentList is ${currentList.joinToString { it.creditCardType }}")
 
-        val newlyFetchedList = getCreditCardListUC.invoke()
+        getCreditCardListUC.invoke().onSuccess { newCardsList ->
+
+        val newlyFetchedList = newCardsList
         Log.v("trpb67", "newlyFetchedList is ${newlyFetchedList.joinToString { it.creditCardType }}")
 
         val newList = buildList {
@@ -50,6 +60,14 @@ class InfiniteListScreenVM @Inject constructor(
             isLoading = false,
         ))
         Log.v("trpb67", "emitResult is $emitResult")
-    }
+        }
+
+        getCreditCardListUC.invoke().onFailure { err ->
+            val emitResult = _stateFlow.tryEmit(InfiniteListScreenState.Error(
+                message = err.toString()
+            ))
+            Log.v("trpb67", "emitResult is $emitResult")
+        }
+        }
 
 }
