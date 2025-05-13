@@ -18,7 +18,7 @@ class GetCreditCardListUC @Inject constructor(
         Log.i("trpb67", "GetCreditCardListUC is invoked!")
         try {
             val result = restApiRemote.get(url = "https://random-data-api.com/api/v2/credit_cards?size=20")
-            val jsonString = result.getOrNull() ?: throw NullPointerException("No Credit Cards Found")
+            val jsonString = result.getOrNull() ?: return@withContext Result.failure(NullPointerException("No Credit Cards Found"))
             return@withContext Result.success(JsonHelper.fromJsonString<List<CreditCardData>>(jsonString)!!)
         } catch (e: SerializationException) {
             return@withContext Result.failure(e)
