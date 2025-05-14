@@ -16,14 +16,15 @@ class GetCreditCardListUC @Inject constructor(
 
     suspend fun invoke(): Result<List<CreditCardData>> = withContext(Dispatchers.IO) {
         Log.i("trpb67", "GetCreditCardListUC is invoked!")
-        try {
+        return@withContext try {
             val result = restApiRemote.get(url = "https://random-data-api.com/api/v2/credit_cards?size=20")
-            val jsonString = result.getOrElse { throwable ->
-                return@withContext Result.failure(throwable)
-            }
-            return@withContext Result.success(JsonHelper.fromJsonString<List<CreditCardData>>(jsonString)!!)
+            val jsonString = result.getOrThrow()
+            val creditCardDataList = JsonHelper.fromJsonString<List<CreditCardData>>(jsonString)
+            Result.success(creditCardDataList!!)
         } catch (e: SerializationException) {
-            return@withContext Result.failure(e)
+            Result.failure(e)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 

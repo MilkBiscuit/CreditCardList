@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "HelloDemo"
+rootProject.name = "CreditCardList"
 include ':app'

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -120,7 +121,8 @@ private fun BoxScope.ErrorView(message: InfiniteListScreenState.Error) {
     Text(
         text=message.message,
         modifier = Modifier
-            .width(150.dp)
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
             .align(Alignment.Center),
         textAlign = TextAlign.Center
     )
