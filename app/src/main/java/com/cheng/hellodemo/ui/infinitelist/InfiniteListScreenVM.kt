@@ -14,7 +14,7 @@ import javax.inject.Inject
 @HiltViewModel
 class InfiniteListScreenVM @Inject constructor(
     private val getCreditCardListUC: GetCreditCardListUC,
-): ViewModel() {
+) : ViewModel() {
 
     private val _stateFlow: MutableStateFlow<InfiniteListScreenState> =
         MutableStateFlow(InfiniteListScreenState.Loading)
@@ -22,13 +22,12 @@ class InfiniteListScreenVM @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getCreditCardListUC.invoke().onSuccess{ cardsList ->
-            val creditCardList = cardsList
-            _stateFlow.value = InfiniteListScreenState.Presenting(
-                dataList = creditCardList,
-                isLoading = false,
-            )
-            }.onFailure{ err ->
+            getCreditCardListUC.invoke().onSuccess { creditCardList ->
+                _stateFlow.value = InfiniteListScreenState.Presenting(
+                    dataList = creditCardList,
+                    isLoading = false,
+                )
+            }.onFailure { err ->
                 val errorMessage = err.toString()
                 _stateFlow.value = InfiniteListScreenState.Error(
                     message = errorMessage
@@ -45,26 +44,28 @@ class InfiniteListScreenVM @Inject constructor(
         _stateFlow.value = currentState.copy(isLoading = true)
         Log.v("trpb67", "currentList is ${currentList.joinToString { it.creditCardType }}")
 
-        getCreditCardListUC.invoke().onSuccess { newCardsList ->
+        getCreditCardListUC.invoke().onSuccess { newlyFetchedList ->
+            Log.v("trpb67","newlyFetchedList is ${newlyFetchedList.joinToString { it.creditCardType }}")
 
-        val newlyFetchedList = newCardsList
-        Log.v("trpb67", "newlyFetchedList is ${newlyFetchedList.joinToString { it.creditCardType }}")
-
-        val newList = buildList {
-            addAll(currentList)
-            addAll(newlyFetchedList)
-        }
-        val emitResult = _stateFlow.tryEmit(InfiniteListScreenState.Presenting(
-            dataList = newList,
-            isLoading = false,
-        ))
-        Log.v("trpb67", "emitResult is $emitResult")
+            val newList = buildList {
+                addAll(currentList)
+                addAll(newlyFetchedList)
+            }
+            val emitResult = _stateFlow.tryEmit(
+                InfiniteListScreenState.Presenting(
+                    dataList = newList,
+                    isLoading = false,
+                )
+            )
+            Log.v("trpb67", "emitResult is $emitResult")
         }.onFailure { err ->
-            val emitResult = _stateFlow.tryEmit(InfiniteListScreenState.Error(
-                message = err.toString()
-            ))
+            val emitResult = _stateFlow.tryEmit(
+                InfiniteListScreenState.Error(
+                    message = err.toString()
+                )
+            )
             Log.v("trpb67", "emitResult is $emitResult")
         }
-        }
+    }
 
 }
