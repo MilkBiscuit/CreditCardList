@@ -26,6 +26,8 @@ class InfiniteListScreenVM @Inject constructor(
                 _stateFlow.value = InfiniteListScreenState.Presenting(
                     dataList = creditCardList,
                     isLoading = false,
+                    isError = false,
+                    errorMessage = ""
                 )
             }.onFailure { err ->
                 val errorMessage = err.toString()
@@ -55,13 +57,18 @@ class InfiniteListScreenVM @Inject constructor(
                 InfiniteListScreenState.Presenting(
                     dataList = newList,
                     isLoading = false,
+                    isError = false,
+                    errorMessage = ""
                 )
             )
             Log.v("trpb67", "emitResult is $emitResult")
         }.onFailure { err ->
             val emitResult = _stateFlow.tryEmit(
-                InfiniteListScreenState.Error(
-                    message = err.toString()
+                InfiniteListScreenState.Presenting(
+                    dataList = currentList,
+                    isLoading = false,
+                    isError = true,
+                    errorMessage = err.toString()
                 )
             )
             Log.v("trpb67", "emitResult is $emitResult")

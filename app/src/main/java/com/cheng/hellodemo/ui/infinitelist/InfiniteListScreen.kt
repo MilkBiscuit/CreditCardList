@@ -111,6 +111,8 @@ private fun BoxScope.PresentingView(
 ) {
     CreditCardListView(
         isLoading = screenState.isLoading,
+        isError = screenState.isError,
+        errorMessage = screenState.errorMessage,
         creditCardList = screenState.dataList,
         loadMore = loadMore,
     )
@@ -131,6 +133,8 @@ private fun BoxScope.ErrorView(message: InfiniteListScreenState.Error) {
 @Composable
 private fun CreditCardListView(
     isLoading: Boolean,
+    isError: Boolean,
+    errorMessage: String,
     creditCardList: List<CreditCardData>,
     loadMore: () -> Unit,
 ) {
@@ -177,6 +181,20 @@ private fun CreditCardListView(
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator(Modifier.size(50.dp))
+                }
+            }
+        }
+        if (isError) {
+            item {
+                Box(
+                    Modifier.fillParentMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text=errorMessage,
+                        modifier = Modifier
+                            .padding(vertical= 20.dp)
+                    )
                 }
             }
         }
@@ -238,12 +256,52 @@ private fun PreviewCreditCardList() {
                         creditCardType = "mastercard",
                     ),
                 ),
-                isLoading = true
+                isLoading = true,
+                isError = false,
+                errorMessage = "",
             ),
             loadMore = {},
         )
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewCreditCardListError() {
+    HelloDemoTheme {
+        InfiniteListView(
+            screenState = InfiniteListScreenState.Presenting(
+                dataList = listOf(
+                    CreditCardData(
+                        creditCardNumber = "1212-1221-1121-1234",
+                        creditCardExpiryDate = "2028-05-02",
+                        creditCardType = "discover",
+                    ),
+                    CreditCardData(
+                        creditCardNumber = "1211-1221-1234-2201",
+                        creditCardExpiryDate = "2025-03-26",
+                        creditCardType = "visa",
+                    ),
+                    CreditCardData(
+                        creditCardNumber = "1234-2121-1221-1211",
+                        creditCardExpiryDate = "2028-05-01",
+                        creditCardType = "diners_club",
+                    ),
+                    CreditCardData(
+                        creditCardNumber = "1234-2121-1221-1211",
+                        creditCardExpiryDate = "2026-03-26",
+                        creditCardType = "mastercard",
+                    ),
+                ),
+                isLoading = false,
+                isError = true,
+                errorMessage = "ERROR: Could not Load More Cards",
+            ),
+            loadMore = {},
+        )
+    }
+}
+
 
 @Preview(showBackground = true, heightDp = 640)
 @Composable
