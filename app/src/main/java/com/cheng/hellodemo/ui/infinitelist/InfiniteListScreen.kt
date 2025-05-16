@@ -166,7 +166,8 @@ private fun CreditCardListView(
                 leadingContent = {
                     Text(
                         text = creditCardData.id.toString(),
-                        modifier = Modifier.width(40.dp)
+                        modifier = Modifier.width(40.dp),
+                        style = MaterialTheme.typography.bodySmall,
                     )
                 }
             )
@@ -180,8 +181,7 @@ private fun CreditCardListView(
                     CircularProgressIndicator(Modifier.size(50.dp))
                 }
             }
-        }
-        if (containsError) {
+        } else if (containsError) {
             item {
                 Box(
                     Modifier.fillParentMaxWidth(),
