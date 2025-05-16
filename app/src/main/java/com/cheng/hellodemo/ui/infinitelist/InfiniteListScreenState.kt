@@ -10,7 +10,9 @@ interface InfiniteListScreenState {
     data class Presenting(
         val dataList: List<CreditCardData>,
         val isLoading: Boolean,
-        val isError: Boolean,
-        val errorMessage: String
-    ): InfiniteListScreenState
+        val errorMessage: String? = null,
+    ): InfiniteListScreenState {
+        val containsError: Boolean
+            get() = errorMessage != null
+    }
 }

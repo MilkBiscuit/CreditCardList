@@ -110,10 +110,7 @@ private fun BoxScope.PresentingView(
     loadMore: () -> Unit,
 ) {
     CreditCardListView(
-        isLoading = screenState.isLoading,
-        isError = screenState.isError,
-        errorMessage = screenState.errorMessage,
-        creditCardList = screenState.dataList,
+        screenState = screenState,
         loadMore = loadMore,
     )
 }
@@ -132,12 +129,12 @@ private fun BoxScope.ErrorView(message: InfiniteListScreenState.Error) {
 
 @Composable
 private fun CreditCardListView(
-    isLoading: Boolean,
-    isError: Boolean,
-    errorMessage: String,
-    creditCardList: List<CreditCardData>,
+    screenState: InfiniteListScreenState.Presenting,
     loadMore: () -> Unit,
 ) {
+    val creditCardList = screenState.dataList
+    val isLoading = screenState.isLoading
+    val containsError = screenState.containsError
     val listState = rememberLazyListState().also {
         it.ScrollEndCallback(callback = loadMore)
     }
@@ -184,14 +181,14 @@ private fun CreditCardListView(
                 }
             }
         }
-        if (isError) {
+        if (containsError) {
             item {
                 Box(
                     Modifier.fillParentMaxWidth(),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text=errorMessage,
+                        text = screenState.errorMessage!!,
                         modifier = Modifier
                             .padding(vertical= 20.dp)
                     )
@@ -257,8 +254,7 @@ private fun PreviewCreditCardList() {
                     ),
                 ),
                 isLoading = true,
-                isError = false,
-                errorMessage = "",
+                errorMessage = null,
             ),
             loadMore = {},
         )
@@ -294,7 +290,6 @@ private fun PreviewCreditCardListError() {
                     ),
                 ),
                 isLoading = false,
-                isError = true,
                 errorMessage = "ERROR: Could not Load More Cards",
             ),
             loadMore = {},
